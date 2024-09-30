@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Canvas Editor Component</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100vw;
+        background-color: #f0f0f0;
+      }
+      canvas-editor {
+        border: 1px solid #ccc;
+        background-color: #fff;
+        display: block; /* Évite les marges ajoutées par défaut */
+      }
+
+      canvas {
+        padding: 0;
+        margin: 0;
+        display: block; /* Évite les espaces autour du canvas */
+        border: none; /* Retire les bordures */
+      }
+    </style>
+  </head>
+  <body>
+    <canvas-editor size="800 600" padding="150"></canvas-editor>
+
+    <!-- Utilise le bundle généré par Webpack -->
+    <script src="/bundle.js"></script>
+  </body>
+</html>
