@@ -1,15 +1,14 @@
 import { Document, Paragraph, List } from "./Document";
-import { TextLayoutEngine } from "./TextLayoutEngine";
-import { TextRenderer } from "./TextRenderer";
 import { FontManager } from "./FontManager";
-import { DimensionManager } from "./utils/DimensionManager"; // Importer DimensionManager
+import { DimensionManager } from "./utils/DimensionManager";
+import { ParagraphRenderer } from "./ParagraphRenderer"; // Importer la classe de rendu des paragraphes
+import { ListRenderer } from "./ListRenderer"; // Importer la classe de rendu des listes
 
 export class CanvasRenderer {
   private context: CanvasRenderingContext2D;
   private fontManager: FontManager;
-  private layoutEngine: TextLayoutEngine;
-  private textRenderer: TextRenderer;
-  private showGrid: boolean = false;
+  private paragraphRenderer: ParagraphRenderer;
+  private listRenderer: ListRenderer;
   private canvasWidth: number;
   private canvasHeight: number;
   private padding: { top: number; right: number; bottom: number; left: number };
@@ -22,23 +21,11 @@ export class CanvasRenderer {
   ) {
     this.context = context;
     this.fontManager = new FontManager();
-    this.layoutEngine = new TextLayoutEngine(
-      this.fontManager,
-      canvasWidth,
-      padding
-    );
-    this.textRenderer = new TextRenderer(
-      this.context,
-      this.fontManager,
-      this.showGrid
-    );
+    this.paragraphRenderer = new ParagraphRenderer(context, this.fontManager);
+    this.listRenderer = new ListRenderer(context, this.fontManager);
     this.canvasWidth = canvasWidth;
     this.canvasHeight = canvasHeight;
     this.padding = padding;
-  }
-
-  setShowGrid(showGrid: boolean) {
-    this.showGrid = showGrid;
   }
 
   async renderDocument(document: Document): Promise<void> {
@@ -47,64 +34,20 @@ export class CanvasRenderer {
 
     for (const element of document.elements) {
       if (element instanceof Paragraph) {
-        y = await this.renderParagraph(element, y);
+        y = await this.paragraphRenderer.renderParagraph(
+          element,
+          y,
+          this.canvasWidth,
+          this.padding
+        );
       } else if (element instanceof List) {
-        y = await this.renderList(element, y);
+        y = await this.listRenderer.renderList(
+          element,
+          y,
+          this.canvasWidth,
+          this.padding
+        );
       }
     }
-  }
-
-  private async renderParagraph(
-    paragraph: Paragraph,
-    y: number
-  ): Promise<number> {
-    const lines = await this.layoutEngine.layoutParagraph(paragraph);
-
-    this.context.strokeStyle = "red";
-    this.context.lineWidth = 1;
-
-    for (const line of lines) {
-      let x = this.padding.left;
-      const { textRuns, maxAscender, maxDescender } = line;
-      const baselineY = y + maxAscender;
-
-      const lineHeight = maxAscender + maxDescender;
-      const lineWidth =
-        this.canvasWidth - this.padding.left - this.padding.right;
-
-      this.context.strokeRect(x, y, lineWidth, lineHeight);
-
-      for (const runInfo of textRuns) {
-        const { textRun, font } = runInfo;
-        x = await this.textRenderer.renderTextRun(textRun, x, baselineY, font);
-      }
-
-      y += maxAscender + maxDescender;
-    }
-    return y;
-  }
-
-  private async renderList(list: List, y: number): Promise<number> {
-    for (const [index, item] of list.items.entries()) {
-      const lines = await this.layoutEngine.layoutListItem(item, list, index);
-      for (const line of lines) {
-        let x = this.padding.left;
-        const { textRuns, maxAscender, maxDescender } = line;
-        const baselineY = y + maxAscender;
-
-        for (const runInfo of textRuns) {
-          const { textRun, font } = runInfo;
-          x = await this.textRenderer.renderTextRun(
-            textRun,
-            x,
-            baselineY,
-            font
-          );
-        }
-
-        y += maxAscender + maxDescender;
-      }
-    }
-    return y;
   }
 }

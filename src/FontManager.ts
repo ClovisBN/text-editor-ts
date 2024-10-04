@@ -1,7 +1,6 @@
-// src/FontManager.ts
-
 import opentype, { Font, Path } from "opentype.js";
 import { FontStyle } from "./utils/fontUtils";
+import { styleDataset } from "./styleDataset"; // Import des styles par défaut
 
 type GlyphCache = { [char: string]: Path };
 
@@ -49,9 +48,10 @@ export class FontManager {
   }
 
   // Nouvelle méthode pour centraliser et appliquer les styles de police
-  async getFormattedFont(style: FontStyle): Promise<Font | undefined> {
-    const fontFamily = style.fontFamily || "RobotoMono";
-    const fontStyleKey = this.getFontStyleKey(style); // Utiliser une méthode privée pour obtenir le style de police
+  async getFormattedFont(style: FontStyle = {}): Promise<Font | undefined> {
+    const appliedStyle = { ...styleDataset.textRun, ...style }; // Utiliser le style par défaut si absent
+    const fontFamily = appliedStyle.fontFamily || "RobotoMono";
+    const fontStyleKey = this.getFontStyleKey(appliedStyle); // Utiliser une méthode privée pour obtenir le style de police
     const fontKey = `${fontFamily}-${fontStyleKey}`;
 
     // Vérifier si la police est déjà chargée

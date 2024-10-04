@@ -75,7 +75,7 @@ export const documentText: DocumentText = {
               style: {
                 bold: false,
                 italic: false,
-                color: "black",
+                color: "red",
               },
             },
           ],
@@ -93,7 +93,7 @@ export const documentText: DocumentText = {
               style: {
                 bold: true,
                 fontSize: 18,
-                color: "black",
+                color: "red",
               },
             },
           ],
@@ -102,7 +102,7 @@ export const documentText: DocumentText = {
       {
         type: "list",
         listStyle: {
-          ordered: false,
+          ordered: true,
         },
         items: [
           {
@@ -111,7 +111,10 @@ export const documentText: DocumentText = {
               textRuns: [
                 {
                   text: "First item",
-                  style: {}, // Un objet de style vide pour chaque textRun
+                  style: {
+                    fontSize: 12,
+                    color: "red",
+                  },
                 },
               ],
             },
@@ -122,7 +125,9 @@ export const documentText: DocumentText = {
               textRuns: [
                 {
                   text: "Second item",
-                  style: {},
+                  style: {
+                    bold: true,
+                  },
                 },
               ],
             },
@@ -155,7 +160,9 @@ export const documentText: DocumentText = {
               textRuns: [
                 {
                   text: "Fifth item",
-                  style: {},
+                  style: {
+                    color: "red",
+                  },
                 },
               ],
             },

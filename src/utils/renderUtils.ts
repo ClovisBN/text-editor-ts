@@ -1,24 +1,34 @@
-// src/renderUtils.ts
-
 import { TextRun } from "../Document";
+import { styleDataset } from "../styleDataset"; // Importer le styleDataset
 
 export function getFontStyle(style: any): string {
-  return `${style.bold ? "bold" : ""} ${style.italic ? "italic" : ""} ${
-    style.fontSize || 16
-  }px ${style.fontFamily || "Arial"}`;
+  const resolvedStyle = {
+    ...styleDataset.textRun, // Utiliser les valeurs par défaut
+    ...style, // Remplacer par les valeurs spécifiques du textRun
+  };
+
+  return `${resolvedStyle.bold ? "bold" : ""} ${
+    resolvedStyle.italic ? "italic" : ""
+  } ${resolvedStyle.fontSize || 16}px ${resolvedStyle.fontFamily || "Arial"}`;
 }
 
 export function renderTextFallback(
   context: CanvasRenderingContext2D,
   textRun: TextRun,
+  style: any,
   x: number,
   y: number
 ) {
+  const resolvedStyle = {
+    ...styleDataset.textRun, // Valeurs par défaut
+    ...style, // Valeurs du textRun
+  };
+
   console.error(
     `Police non trouvée pour le texte: "${textRun.text}". Utilisation de la police par défaut.`
   );
-  context.fillStyle = textRun.style.color || "black";
-  context.font = getFontStyle(textRun.style);
+  context.fillStyle = resolvedStyle.color || "black"; // Assurer la couleur ici
+  context.font = getFontStyle(resolvedStyle);
   context.fillText(textRun.text, x, y);
 }
 

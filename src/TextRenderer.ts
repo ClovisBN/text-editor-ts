@@ -3,6 +3,7 @@ import { FontManager } from "./FontManager";
 import { TextRun } from "./Document";
 import { Font, Path } from "opentype.js";
 import { renderTextFallback, calculateTextWidth } from "./utils/renderUtils";
+import { styleDataset } from "./styleDataset"; // Importer le styleDataset
 
 export class TextRenderer {
   private context: CanvasRenderingContext2D;
@@ -17,6 +18,18 @@ export class TextRenderer {
     this.context = context;
     this.fontManager = fontManager;
     this.showGrid = showGrid;
+  }
+
+  // Méthode pour appliquer les styles avec fallback sur styleDataset
+  private getResolvedStyle(textRun: TextRun) {
+    return {
+      fontSize: textRun.style?.fontSize || styleDataset.textRun.fontSize,
+      fontStyle: textRun.style?.fontStyle || styleDataset.textRun.fontStyle,
+      bold: textRun.style?.bold ?? styleDataset.textRun.bold,
+      italic: textRun.style?.italic ?? styleDataset.textRun.italic,
+      color: textRun.style?.color || styleDataset.textRun.color,
+      fontFamily: textRun.style?.fontFamily || styleDataset.textRun.fontFamily,
+    };
   }
 
   async renderLines(lines: LayoutLine[], startX: number, startY: number) {
@@ -39,15 +52,24 @@ export class TextRenderer {
     baselineY: number,
     font?: Font
   ): Promise<number> {
+    // Résoudre les styles avec fallback
+    const style = this.getResolvedStyle(textRun);
+
     if (!font) {
-      font = await this.fontManager.getFormattedFont(textRun.style);
+      font = await this.fontManager.getFormattedFont(style);
     }
 
     if (font) {
-      const advanceWidth = this.renderTextPath(font, textRun, x, baselineY);
+      const advanceWidth = this.renderTextPath(
+        font,
+        textRun,
+        style,
+        x,
+        baselineY
+      );
       x += advanceWidth;
     } else {
-      renderTextFallback(this.context, textRun, x, baselineY);
+      renderTextFallback(this.context, textRun, style, x, baselineY);
       x += calculateTextWidth(this.context, textRun.text);
     }
 
@@ -57,19 +79,30 @@ export class TextRenderer {
   private renderTextPath(
     font: Font,
     textRun: TextRun,
+    style: { fontSize: number; color: string },
     x: number,
     y: number
   ): number {
-    const fontSize = textRun.style.fontSize || 12;
+    const fontSize = style.fontSize;
+
+    // Sauvegarder l'état du contexte une seule fois
     this.context.save();
 
-    this.context.fillStyle = textRun.style.color || "black";
+    // Appliquer le style avant de dessiner le texte
+    this.applyTextStyle(style);
 
     const path: Path = font.getPath(textRun.text, x, y, fontSize);
-    path.draw(this.context);
+    path.fill = this.context.fillStyle as string; // Appliquer explicitement la couleur
+    path.draw(this.context); // Dessiner le texte
 
-    this.context.restore();
+    this.context.restore(); // Restaurer le contexte
 
     return font.getAdvanceWidth(textRun.text, fontSize);
+  }
+
+  // Méthode pour appliquer les styles (couleur, taille, etc.)
+  private applyTextStyle(style: { fontSize: number; color: string }) {
+    this.context.fillStyle = style.color; // Appliquer la couleur
+    console.log("Couleur appliquée :", style.color);
   }
 }
