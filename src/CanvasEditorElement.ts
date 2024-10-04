@@ -1,9 +1,8 @@
-// src/CanvasEditorElement.ts
 import { CanvasRenderer } from "./CanvasRenderer";
 import { Document } from "./Document";
 import { DocumentText } from "./types";
 import { documentText as defaultDocumentData } from "./documentData";
-import { parseSize, parsePadding } from "./utils/canvasUtils"; // Utilitaires pour gérer les tailles et le padding
+import { DimensionManager } from "./utils/DimensionManager"; // Importer DimensionManager
 
 export interface CanvasEditorOptions {
   size?: string;
@@ -18,6 +17,19 @@ export class CanvasEditorElement extends HTMLElement {
   private documentData: DocumentText;
   private observer: ResizeObserver;
 
+  private size: { width: number; height: number } = { width: 800, height: 600 }; // Valeurs par défaut
+  private padding: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+  } = {
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+  }; // Valeurs par défaut
+
   constructor() {
     super();
     this.documentData = defaultDocumentData;
@@ -26,6 +38,9 @@ export class CanvasEditorElement extends HTMLElement {
     // Initialisation du canvas
     this.canvas = this.createCanvas();
     this.context = this.canvas.getContext("2d");
+
+    // Initialiser les attributs
+    this.initializeAttributes();
 
     // Observateur pour les changements de taille
     this.observer = new ResizeObserver(() => this.resizeCanvas());
@@ -48,16 +63,34 @@ export class CanvasEditorElement extends HTMLElement {
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {
     if (oldValue !== newValue) {
-      if (name === "document-data") {
-        try {
-          this.documentData = JSON.parse(newValue || "{}");
-        } catch (error) {
-          console.error("Invalid JSON format for document-data attribute.");
-        }
-      }
+      this.initializeAttributes();
       this.initializeCanvas().then(() => {
         this.renderContent();
       });
+    }
+  }
+
+  // Nouvelle méthode pour initialiser et gérer les attributs HTML
+  private initializeAttributes() {
+    // Initialiser la taille à partir de l'attribut 'size' ou utiliser la taille par défaut
+    const sizeAttribute = this.getAttribute("size") || "800 600";
+    this.size = DimensionManager.parseSize(sizeAttribute);
+
+    // Initialiser le padding à partir de l'attribut 'padding' ou utiliser le padding par défaut
+    const paddingAttribute = this.getAttribute("padding") || "0";
+    this.padding = DimensionManager.parsePadding(paddingAttribute);
+
+    // Initialiser les données du document à partir de l'attribut 'document-data'
+    const documentDataAttribute = this.getAttribute("document-data");
+    if (documentDataAttribute) {
+      try {
+        this.documentData = JSON.parse(documentDataAttribute);
+      } catch (error) {
+        console.error("Invalid JSON format for document-data attribute.");
+        this.documentData = defaultDocumentData;
+      }
+    } else {
+      this.documentData = defaultDocumentData;
     }
   }
 
@@ -68,35 +101,33 @@ export class CanvasEditorElement extends HTMLElement {
   }
 
   private resizeCanvas() {
-    const { width, height } = parseSize(this.getAttribute("size") || "800 600");
-    const padding = this.getAttribute("padding") || "0";
-    const paddingValues = parsePadding(padding);
+    const { width, height } = this.size || { width: 800, height: 600 }; // Gérer le cas où size est undefined
+    const paddingValues = this.padding || {
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+    }; // Gérer le cas où padding est undefined
 
-    const scaleFactor = 4; // Facteur d'échelle pour la haute résolution
+    const scaleFactor = 2;
     const ratio = window.devicePixelRatio || 1;
 
-    // Configuration de la résolution du canvas
     this.setupHighResolutionCanvas(width, height, scaleFactor * ratio);
 
-    // Réglage du transform pour le ratio
     if (this.context) {
       this.context.setTransform(1, 0, 0, 1, 0, 0); // Reset
       this.context.scale(scaleFactor * ratio, scaleFactor * ratio); // Scale
-      // Le padding est maintenant géré dans CanvasRenderer, donc pas besoin de translate ici
     }
   }
 
-  // Méthode pour configurer la résolution et la taille d'affichage du canvas avec un facteur d'échelle
   private setupHighResolutionCanvas(
     width: number,
     height: number,
     resolution: number
   ) {
-    // Taille d'affichage en CSS
     this.canvas.style.width = `${width}px`;
     this.canvas.style.height = `${height}px`;
 
-    // Taille réelle en pixels
     this.canvas.width = width * resolution;
     this.canvas.height = height * resolution;
   }
@@ -117,12 +148,9 @@ export class CanvasEditorElement extends HTMLElement {
 
   private renderContent() {
     if (this.documentData && this.context) {
-      const { width, height } = parseSize(
-        this.getAttribute("size") || "800 600"
-      );
-      const paddingValues = parsePadding(this.getAttribute("padding") || "0");
+      const { width, height } = this.size;
+      const paddingValues = this.padding;
 
-      // Création du renderer avec les nouveaux paramètres requis
       this.renderer = new CanvasRenderer(
         this.context,
         width,
@@ -134,7 +162,6 @@ export class CanvasEditorElement extends HTMLElement {
     }
   }
 
-  // Méthode pour accéder au renderer depuis l'extérieur (par exemple, pour définir showGrid)
   public getRenderer(): CanvasRenderer | undefined {
     return this.renderer;
   }

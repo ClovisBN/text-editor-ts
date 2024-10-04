@@ -13,10 +13,10 @@ export const documentText: DocumentText = {
         text: {
           textRuns: [
             {
-              text: "Main Title fg WA",
+              text: "Main Title Wg",
               style: {
                 bold: true,
-                fontSize: 34,
+                fontSize: 36,
                 color: "black",
               },
             },
@@ -26,16 +26,15 @@ export const documentText: DocumentText = {
       {
         type: "paragraph",
         paragraphStyle: {
-          lineHeight: 1.2,
+          lineHeight: 1,
         }, // Un objet de style vide même s'il n'y a pas de styles spécifiques
         text: {
           textRuns: [
             {
-              text: "This is a sample paragraph with ",
+              text: "In the example below, This is a sample paragraph with ",
               style: {
                 bold: false,
                 italic: false,
-                fontSize: 16,
                 color: "black",
               },
             },
@@ -44,7 +43,6 @@ export const documentText: DocumentText = {
               style: {
                 bold: true,
                 italic: false,
-                fontSize: 16,
                 color: "black",
               },
             },
@@ -53,7 +51,6 @@ export const documentText: DocumentText = {
               style: {
                 bold: false,
                 italic: false,
-                fontSize: 16,
                 color: "black",
               },
             },
@@ -62,16 +59,22 @@ export const documentText: DocumentText = {
               style: {
                 bold: true,
                 italic: true,
-                fontSize: 16,
                 color: "black",
               },
             },
             {
-              text: "in the same paragraph.",
+              text: "in the same paragraph. accepts an object where we can change the",
               style: {
                 bold: false,
                 italic: false,
-                fontSize: 16,
+                color: "black",
+              },
+            },
+            {
+              text: " accepts an object where we can change the",
+              style: {
+                bold: false,
+                italic: false,
                 color: "black",
               },
             },

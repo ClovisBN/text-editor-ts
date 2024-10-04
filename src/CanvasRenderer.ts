@@ -2,6 +2,7 @@ import { Document, Paragraph, List } from "./Document";
 import { TextLayoutEngine } from "./TextLayoutEngine";
 import { TextRenderer } from "./TextRenderer";
 import { FontManager } from "./FontManager";
+import { DimensionManager } from "./utils/DimensionManager"; // Importer DimensionManager
 
 export class CanvasRenderer {
   private context: CanvasRenderingContext2D;
@@ -58,10 +59,20 @@ export class CanvasRenderer {
     y: number
   ): Promise<number> {
     const lines = await this.layoutEngine.layoutParagraph(paragraph);
+
+    this.context.strokeStyle = "red";
+    this.context.lineWidth = 1;
+
     for (const line of lines) {
       let x = this.padding.left;
       const { textRuns, maxAscender, maxDescender } = line;
       const baselineY = y + maxAscender;
+
+      const lineHeight = maxAscender + maxDescender;
+      const lineWidth =
+        this.canvasWidth - this.padding.left - this.padding.right;
+
+      this.context.strokeRect(x, y, lineWidth, lineHeight);
 
       for (const runInfo of textRuns) {
         const { textRun, font } = runInfo;
@@ -75,7 +86,6 @@ export class CanvasRenderer {
 
   private async renderList(list: List, y: number): Promise<number> {
     for (const [index, item] of list.items.entries()) {
-      // Passer l'élément list en tant que troisième argument
       const lines = await this.layoutEngine.layoutListItem(item, list, index);
       for (const line of lines) {
         let x = this.padding.left;

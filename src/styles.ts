@@ -1,5 +1,5 @@
 const baseStyle = {
-  fontSize: 16,
+  fontSize: 12,
   fontStyle: "normal",
   color: "black",
 };

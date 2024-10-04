@@ -1,10 +1,9 @@
-// src/main.ts
 import "./CanvasEditorElement"; // Assure l'importation du Custom Element
 import { CanvasRenderer } from "./CanvasRenderer";
 import { Document } from "./Document";
 import { documentText } from "./documentData";
 import { FontManager } from "./FontManager";
-import { parseSize, parsePadding } from "./utils/canvasUtils";
+import { DimensionManager } from "./utils/DimensionManager"; // Importer DimensionManager
 
 document.addEventListener("DOMContentLoaded", () => {
   setTimeout(async () => {
@@ -20,10 +19,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (canvas) {
         const context = canvas.getContext("2d");
         if (context) {
-          const { width, height } = parseSize(
+          const { width, height } = DimensionManager.parseSize(
             canvasEditor.getAttribute("size") || "800 600"
           );
-          const paddingValues = parsePadding(
+          const paddingValues = DimensionManager.parsePadding(
             canvasEditor.getAttribute("padding") || "0"
           );
 

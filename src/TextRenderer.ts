@@ -1,11 +1,8 @@
-import { TextRun } from "./Document";
+import { LayoutLine } from "./TextLayoutEngine";
 import { FontManager } from "./FontManager";
+import { TextRun } from "./Document";
 import { Font, Path } from "opentype.js";
-import {
-  renderTextFallback,
-  getFontStyle,
-  calculateTextWidth,
-} from "./utils/renderUtils";
+import { renderTextFallback, calculateTextWidth } from "./utils/renderUtils";
 
 export class TextRenderer {
   private context: CanvasRenderingContext2D;
@@ -22,6 +19,20 @@ export class TextRenderer {
     this.showGrid = showGrid;
   }
 
+  async renderLines(lines: LayoutLine[], startX: number, startY: number) {
+    let y = startY;
+    for (const line of lines) {
+      let x = startX;
+      const baselineY = y + line.maxAscender;
+
+      for (const { textRun, font } of line.textRuns) {
+        x = await this.renderTextRun(textRun, x, baselineY, font);
+      }
+
+      y += line.maxAscender + line.maxDescender; // Passer à la ligne suivante
+    }
+  }
+
   async renderTextRun(
     textRun: TextRun,
     x: number,
@@ -29,7 +40,7 @@ export class TextRenderer {
     font?: Font
   ): Promise<number> {
     if (!font) {
-      font = await this.fontManager.getFont(textRun.style);
+      font = await this.fontManager.getFormattedFont(textRun.style);
     }
 
     if (font) {
@@ -49,21 +60,16 @@ export class TextRenderer {
     x: number,
     y: number
   ): number {
-    const fontSize = textRun.style.fontSize || 16;
+    const fontSize = textRun.style.fontSize || 12;
     this.context.save();
 
-    // Définir la couleur du texte
     this.context.fillStyle = textRun.style.color || "black";
 
-    // Dessiner le texte avec la police appropriée
     const path: Path = font.getPath(textRun.text, x, y, fontSize);
     path.draw(this.context);
 
-    this.context.restore(); // Restaurer le contexte après le rendu
+    this.context.restore();
 
-    // Calculer l'avance horizontale en utilisant getAdvanceWidth
-    const advanceWidth = font.getAdvanceWidth(textRun.text, fontSize);
-
-    return advanceWidth;
+    return font.getAdvanceWidth(textRun.text, fontSize);
   }
 }
