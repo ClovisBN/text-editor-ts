@@ -1,5 +1,5 @@
-import { TextRun } from "../Document";
-import { styleDataset } from "../styleDataset"; // Importer le styleDataset
+import { TextRun } from "../DocumentStructure";
+import { styleDataset } from "../StyleDefaults"; // Importer le styleDataset
 
 export function getFontStyle(style: any): string {
   const resolvedStyle = {

@@ -1,6 +1,6 @@
 import opentype, { Font, Path } from "opentype.js";
 import { FontStyle } from "./utils/fontUtils";
-import { styleDataset } from "./styleDataset"; // Import des styles par défaut
+import { styleDataset } from "./StyleDefaults"; // Import des styles par défaut
 
 type GlyphCache = { [char: string]: Path };
 

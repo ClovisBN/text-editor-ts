@@ -1,10 +1,10 @@
-import { List } from "./Document";
+import { List } from "./DocumentStructure";
 import { TextLayoutEngine } from "./TextLayoutEngine";
 import { TextRenderer } from "./TextRenderer";
 import { FontManager } from "./FontManager";
 import { ParagraphLayoutEngine } from "./ParagraphLayoutEngine";
 import { ListLayoutEngine } from "./ListLayoutEngine";
-import { styleDataset } from "./styleDataset"; // Import des styles par défaut
+import { StyleManager } from "./utils/StyleManager"; // Utilisation de StyleManager
 
 export class ListRenderer {
   private context: CanvasRenderingContext2D;
@@ -57,11 +57,9 @@ export class ListRenderer {
       const lines = await this.layoutEngine.layoutListItem(item, index);
       const firstRun = item.text.textRuns[0];
 
-      // Fusionner les styles de l'élément avec ceux par défaut
-      const style = {
-        ...styleDataset.textRun, // Styles par défaut
-        ...firstRun.style, // Priorité au style de la structure JSON
-      };
+      // Utilisation de StyleManager pour fusionner les styles
+      const style = StyleManager.getTextRunStyle(firstRun.style);
+
       const fontSize = style.fontSize; // Utiliser la taille de police correcte
 
       // Système de numérotation ou de puces

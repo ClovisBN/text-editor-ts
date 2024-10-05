@@ -1,9 +1,9 @@
 import { LayoutLine } from "./TextLayoutEngine";
 import { FontManager } from "./FontManager";
-import { TextRun } from "./Document";
+import { TextRun } from "./DocumentStructure";
 import { Font, Path } from "opentype.js";
 import { renderTextFallback, calculateTextWidth } from "./utils/renderUtils";
-import { styleDataset } from "./styleDataset"; // Importer le styleDataset
+import { StyleManager } from "./utils/StyleManager"; // Importer StyleManager
 
 export class TextRenderer {
   private context: CanvasRenderingContext2D;
@@ -18,18 +18,6 @@ export class TextRenderer {
     this.context = context;
     this.fontManager = fontManager;
     this.showGrid = showGrid;
-  }
-
-  // Méthode pour appliquer les styles avec fallback sur styleDataset
-  private getResolvedStyle(textRun: TextRun) {
-    return {
-      fontSize: textRun.style?.fontSize || styleDataset.textRun.fontSize,
-      fontStyle: textRun.style?.fontStyle || styleDataset.textRun.fontStyle,
-      bold: textRun.style?.bold ?? styleDataset.textRun.bold,
-      italic: textRun.style?.italic ?? styleDataset.textRun.italic,
-      color: textRun.style?.color || styleDataset.textRun.color,
-      fontFamily: textRun.style?.fontFamily || styleDataset.textRun.fontFamily,
-    };
   }
 
   async renderLines(lines: LayoutLine[], startX: number, startY: number) {
@@ -52,8 +40,8 @@ export class TextRenderer {
     baselineY: number,
     font?: Font
   ): Promise<number> {
-    // Résoudre les styles avec fallback
-    const style = this.getResolvedStyle(textRun);
+    // Utilisation de StyleManager pour résoudre les styles
+    const style = StyleManager.getTextRunStyle(textRun.style);
 
     if (!font) {
       font = await this.fontManager.getFormattedFont(style);

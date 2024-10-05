@@ -1,8 +1,7 @@
-import { Paragraph, TextRun } from "./Document";
+import { Paragraph } from "./DocumentStructure";
 import { FontManager } from "./FontManager";
 import { LayoutLine } from "./TextLayoutEngine";
-import { styleDataset } from "./styleDataset"; // Import du style par défaut
-import { Font } from "opentype.js";
+import { StyleManager } from "./utils/StyleManager"; // Utilisation de StyleManager
 import { BaseLayoutEngine } from "./BaseLayoutEngine"; // Classe de base commune
 
 export class ParagraphLayoutEngine extends BaseLayoutEngine {
@@ -14,14 +13,9 @@ export class ParagraphLayoutEngine extends BaseLayoutEngine {
     super(fontManager, canvasWidth, padding);
   }
 
-  // Implémentation de la méthode layoutParagraph
+  // Utilise une méthode utilitaire pour compléter les styles et gérer les TextRuns
   async layoutParagraph(paragraph: Paragraph): Promise<LayoutLine[]> {
-    const maxWidth =
-      this.canvasWidth - (this.padding.left + this.padding.right);
-    const textRuns = paragraph.text.textRuns;
-    const lineHeight =
-      paragraph.paragraphStyle?.lineHeight || styleDataset.paragraph.lineHeight;
-
+    const textRuns = StyleManager.completeTextRuns(paragraph.text.textRuns); // Utilisation d'une méthode utilitaire pour gérer les styles
     return this.layoutTextRuns(textRuns); // Utilise la logique commune depuis BaseLayoutEngine
   }
 

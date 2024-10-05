@@ -1,7 +1,7 @@
 import { CanvasRenderer } from "./CanvasRenderer";
-import { Document } from "./Document";
+import { Document } from "./DocumentStructure";
 import { DocumentText } from "./types";
-import { documentText as defaultDocumentData } from "./documentData";
+import { documentText as defaultDocumentData } from "./exampleDocumentData";
 import { DimensionManager } from "./utils/DimensionManager"; // Importer DimensionManager
 
 export interface CanvasEditorOptions {

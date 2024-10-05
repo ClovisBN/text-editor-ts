@@ -1,7 +1,7 @@
 import "./CanvasEditorElement"; // Assure l'importation du Custom Element
 import { CanvasRenderer } from "./CanvasRenderer";
-import { Document } from "./Document";
-import { documentText } from "./documentData";
+import { Document } from "./DocumentStructure";
+import { documentText } from "./exampleDocumentData";
 import { FontManager } from "./FontManager";
 import { DimensionManager } from "./utils/DimensionManager"; // Importer DimensionManager
 

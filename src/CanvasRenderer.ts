@@ -1,14 +1,13 @@
-import { Document, Paragraph, List } from "./Document";
+import { Document, Paragraph, List } from "./DocumentStructure";
 import { FontManager } from "./FontManager";
-import { DimensionManager } from "./utils/DimensionManager";
 import { ParagraphRenderer } from "./ParagraphRenderer"; // Importer la classe de rendu des paragraphes
 import { ListRenderer } from "./ListRenderer"; // Importer la classe de rendu des listes
 
 export class CanvasRenderer {
   private context: CanvasRenderingContext2D;
-  private fontManager: FontManager;
   private paragraphRenderer: ParagraphRenderer;
   private listRenderer: ListRenderer;
+  private fontManager: FontManager;
   private canvasWidth: number;
   private canvasHeight: number;
   private padding: { top: number; right: number; bottom: number; left: number };
@@ -20,7 +19,7 @@ export class CanvasRenderer {
     padding: { top: number; right: number; bottom: number; left: number }
   ) {
     this.context = context;
-    this.fontManager = new FontManager();
+    this.fontManager = new FontManager(); // Gestion des polices centralisée
     this.paragraphRenderer = new ParagraphRenderer(context, this.fontManager);
     this.listRenderer = new ListRenderer(context, this.fontManager);
     this.canvasWidth = canvasWidth;
@@ -29,7 +28,9 @@ export class CanvasRenderer {
   }
 
   async renderDocument(document: Document): Promise<void> {
+    // Charger toutes les polices avant de commencer le rendu
     await this.fontManager.loadFonts();
+
     let y = this.padding.top;
 
     for (const element of document.elements) {

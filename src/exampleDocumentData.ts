@@ -17,7 +17,7 @@ export const documentText: DocumentText = {
               style: {
                 bold: true,
                 fontSize: 36,
-                color: "black",
+                color: "green",
               },
             },
           ],
@@ -161,7 +161,8 @@ export const documentText: DocumentText = {
                 {
                   text: "Fifth item",
                   style: {
-                    color: "red",
+                    color: "blue",
+                    italic: true,
                   },
                 },
               ],

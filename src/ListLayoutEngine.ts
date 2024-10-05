@@ -1,8 +1,7 @@
-import { ListItem, TextRun } from "./Document";
+import { ListItem } from "./DocumentStructure";
 import { FontManager } from "./FontManager";
 import { LayoutLine } from "./TextLayoutEngine";
-import { styleDataset } from "./styleDataset"; // Import des styles par défaut
-import { Font } from "opentype.js";
+import { StyleManager } from "./utils/StyleManager"; // Utilisation de StyleManager
 import { BaseLayoutEngine } from "./BaseLayoutEngine"; // Classe de base commune
 
 export class ListLayoutEngine extends BaseLayoutEngine {
@@ -14,9 +13,10 @@ export class ListLayoutEngine extends BaseLayoutEngine {
     super(fontManager, canvasWidth, padding);
   }
 
-  // Implémentation de la méthode layoutListItem
+  // Utilise une méthode utilitaire pour compléter les styles et gérer les TextRuns
   async layoutListItem(item: ListItem, index: number): Promise<LayoutLine[]> {
-    return this.layoutTextRuns(item.text.textRuns); // Utilise la logique commune depuis BaseLayoutEngine
+    const textRuns = StyleManager.completeTextRuns(item.text.textRuns); // Utilisation d'une méthode utilitaire pour gérer les styles
+    return this.layoutTextRuns(textRuns); // Utilise la logique commune depuis BaseLayoutEngine
   }
 
   // Implémentation de la méthode abstraite 'layoutElement'

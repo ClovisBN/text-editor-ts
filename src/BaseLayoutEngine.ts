@@ -1,7 +1,7 @@
-import { TextRun } from "./Document";
+import { TextRun } from "./DocumentStructure";
 import { FontManager } from "./FontManager";
 import { LayoutLine } from "./TextLayoutEngine";
-import { styleDataset } from "./styleDataset"; // Import des styles par défaut
+import { StyleManager } from "./utils/StyleManager"; // Utilisation de StyleManager
 
 export abstract class BaseLayoutEngine {
   protected fontManager: FontManager;
@@ -41,10 +41,9 @@ export abstract class BaseLayoutEngine {
     const maxWidth = this.canvasWidth - this.padding.left - this.padding.right;
 
     const fontPromises = textRuns.map((run) =>
-      this.fontManager.getFormattedFont({
-        ...styleDataset.textRun, // Valeur par défaut
-        ...run.style, // Valeur JSON prioritaire
-      })
+      this.fontManager.getFormattedFont(
+        StyleManager.getTextRunStyle(run.style) // Utilisation de StyleManager pour compléter les styles
+      )
     );
     const fonts = await Promise.all(fontPromises);
 
@@ -59,7 +58,7 @@ export abstract class BaseLayoutEngine {
     for (let i = 0; i < textRuns.length; i++) {
       const run = textRuns[i];
       const font = fonts[i];
-      const fontSize = run.style.fontSize || styleDataset.textRun.fontSize;
+      const fontSize = run.style.fontSize || 12; // Valeur de secours pour la taille de police
       const words = run.text.split(" ");
 
       for (let j = 0; j < words.length; j++) {

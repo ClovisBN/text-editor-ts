@@ -9,7 +9,6 @@ export const styleDataset = {
   },
   textRun: {
     fontSize: 12,
-    fontStyle: "normal",
     bold: false,
     italic: false,
     color: "black",

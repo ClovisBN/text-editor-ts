@@ -1,4 +1,4 @@
-import { Paragraph, List, ListItem, TextRun } from "./Document"; // Import de ListItem
+import { Paragraph, List, ListItem, TextRun } from "./DocumentStructure"; // Import de ListItem
 import { Font } from "opentype.js"; // Import de Font depuis opentype.js
 import { ParagraphLayoutEngine } from "./ParagraphLayoutEngine";
 import { ListLayoutEngine } from "./ListLayoutEngine";

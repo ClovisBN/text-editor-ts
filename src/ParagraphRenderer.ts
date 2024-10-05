@@ -1,10 +1,10 @@
-import { Paragraph } from "./Document";
+import { Paragraph } from "./DocumentStructure";
 import { TextLayoutEngine } from "./TextLayoutEngine";
 import { TextRenderer } from "./TextRenderer";
 import { FontManager } from "./FontManager";
 import { ParagraphLayoutEngine } from "./ParagraphLayoutEngine"; // Import
 import { ListLayoutEngine } from "./ListLayoutEngine"; // Import
-import { styleDataset } from "./styleDataset"; // Import des styles par défaut
+import { StyleManager } from "./utils/StyleManager"; // Utilisation de StyleManager
 
 export class ParagraphRenderer {
   private context: CanvasRenderingContext2D;
@@ -65,14 +65,11 @@ export class ParagraphRenderer {
 
       this.context.strokeRect(x, y, lineWidth, lineHeight);
 
-      // Utilisation correcte des styles par défaut pour chaque TextRun
+      // Utilisation correcte des styles avec StyleManager pour chaque TextRun
       for (const runInfo of textRuns) {
         const { textRun, font } = runInfo;
 
-        const style = {
-          ...styleDataset.textRun, // Styles par défaut
-          ...textRun.style, // Priorité au style de la structure JSON
-        };
+        const style = StyleManager.getTextRunStyle(textRun.style); // Utilisation de StyleManager
 
         x = await this.textRenderer.renderTextRun(textRun, x, baselineY, font);
       }
