@@ -1,3 +1,5 @@
+// src/DocumentStructure.ts
+
 import {
   DocumentText,
   ParagraphElement,
@@ -5,39 +7,35 @@ import {
   ListItemElement,
   TextRunElement,
 } from "./types";
+import { ElementFactory } from "./ElementFactory";
 
 export class Document {
   elements: (Paragraph | List)[];
 
   constructor(data: DocumentText) {
     this.elements = data.content.elements.map((element) => {
-      if (element.type === "paragraph") {
-        return new Paragraph(element);
-      } else if (element.type === "list") {
-        return new List(element);
-      }
-      throw new Error("Unknown element type");
+      return ElementFactory.createElement(element);
     });
   }
 }
 
 export class Paragraph {
   text: TextContent;
-  paragraphStyle?: { heading?: string; lineHeight?: number }; // Ajout de paragraphStyle
+  paragraphStyle?: { heading?: string; lineHeight?: number };
 
   constructor(data: ParagraphElement) {
     this.text = new TextContent(data.text);
-    this.paragraphStyle = data.paragraphStyle; // Assigner le style de paragraphe
+    this.paragraphStyle = data.paragraphStyle;
   }
 }
 
 export class List {
   items: ListItem[];
-  listStyle: { ordered: boolean; lineHeight?: number }; // Ajout de listStyle
+  listStyle: { ordered: boolean; lineHeight?: number };
 
   constructor(data: ListElement) {
     this.items = data.items.map((item) => new ListItem(item));
-    this.listStyle = data.listStyle; // Assigner le style de liste
+    this.listStyle = data.listStyle;
   }
 }
 

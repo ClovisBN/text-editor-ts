@@ -1,9 +1,9 @@
-import { TextRun } from "./DocumentStructure";
-import { FontManager } from "./FontManager";
-import { LayoutLine } from "./TextLayoutEngine";
-import { StyleManager } from "./utils/StyleManager"; // Utilisation de StyleManager
+import { TextRun } from "../DocumentStructure";
+import { FontManager } from "../FontManager";
+import { LayoutLine } from "./TypesLayoutEngine";
+import { StyleManager } from "../utils/StyleManager"; // Utilisation de StyleManager
 
-export abstract class BaseLayoutEngine {
+export abstract class TextRunLayoutEngine {
   protected fontManager: FontManager;
   protected canvasWidth: number;
   protected padding: {

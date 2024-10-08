@@ -1,5 +1,5 @@
 import "./CanvasEditorElement"; // Assure l'importation du Custom Element
-import { CanvasRenderer } from "./CanvasRenderer";
+import { TypesRenderer } from "./Renderer/TypesRenderer";
 import { Document } from "./DocumentStructure";
 import { documentText } from "./exampleDocumentData";
 import { FontManager } from "./FontManager";
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
             await fontManager.loadFonts();
             console.log("Toutes les polices ont été chargées.");
 
-            const renderer = new CanvasRenderer(
+            const renderer = new TypesRenderer(
               context,
               width,
               height,

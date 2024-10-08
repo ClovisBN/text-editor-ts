@@ -1,11 +1,8 @@
 import { TextRun } from "../DocumentStructure";
-import { styleDataset } from "../StyleDefaults"; // Importer le styleDataset
+import { StyleManager } from "../utils/StyleManager"; // Import mis à jour
 
 export function getFontStyle(style: any): string {
-  const resolvedStyle = {
-    ...styleDataset.textRun, // Utiliser les valeurs par défaut
-    ...style, // Remplacer par les valeurs spécifiques du textRun
-  };
+  const resolvedStyle = StyleManager.getTextRunStyle(style);
 
   return `${resolvedStyle.bold ? "bold" : ""} ${
     resolvedStyle.italic ? "italic" : ""
@@ -19,15 +16,12 @@ export function renderTextFallback(
   x: number,
   y: number
 ) {
-  const resolvedStyle = {
-    ...styleDataset.textRun, // Valeurs par défaut
-    ...style, // Valeurs du textRun
-  };
+  const resolvedStyle = StyleManager.getTextRunStyle(style);
 
   console.error(
     `Police non trouvée pour le texte: "${textRun.text}". Utilisation de la police par défaut.`
   );
-  context.fillStyle = resolvedStyle.color || "black"; // Assurer la couleur ici
+  context.fillStyle = resolvedStyle.color || "black";
   context.font = getFontStyle(resolvedStyle);
   context.fillText(textRun.text, x, y);
 }

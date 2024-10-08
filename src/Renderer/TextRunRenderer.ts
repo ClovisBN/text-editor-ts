@@ -1,11 +1,11 @@
-import { LayoutLine } from "./TextLayoutEngine";
-import { FontManager } from "./FontManager";
-import { TextRun } from "./DocumentStructure";
-import { Font, Path } from "opentype.js";
-import { renderTextFallback, calculateTextWidth } from "./utils/renderUtils";
-import { StyleManager } from "./utils/StyleManager"; // Importer StyleManager
+import { LayoutLine } from "../LayoutEngine/TypesLayoutEngine";
+import { FontManager } from "../FontManager";
+import { TextRun } from "../DocumentStructure";
+import { renderTextFallback, calculateTextWidth } from "../utils/renderUtils";
+import { StyleManager } from "../utils/StyleManager";
+import { Font, Path } from "../utils/FontAdapter"; // On utilise maintenant l'adapter
 
-export class TextRenderer {
+export class TextRunRenderer {
   private context: CanvasRenderingContext2D;
   private fontManager: FontManager;
   private showGrid: boolean;
@@ -30,7 +30,7 @@ export class TextRenderer {
         x = await this.renderTextRun(textRun, x, baselineY, font);
       }
 
-      y += line.maxAscender + line.maxDescender; // Passer à la ligne suivante
+      y += line.maxAscender + line.maxDescender;
     }
   }
 
@@ -40,9 +40,7 @@ export class TextRenderer {
     baselineY: number,
     font?: Font
   ): Promise<number> {
-    // Utilisation de StyleManager pour résoudre les styles
     const style = StyleManager.getTextRunStyle(textRun.style);
-
     if (!font) {
       font = await this.fontManager.getFormattedFont(style);
     }
@@ -72,25 +70,18 @@ export class TextRenderer {
     y: number
   ): number {
     const fontSize = style.fontSize;
-
-    // Sauvegarder l'état du contexte une seule fois
     this.context.save();
-
-    // Appliquer le style avant de dessiner le texte
     this.applyTextStyle(style);
 
     const path: Path = font.getPath(textRun.text, x, y, fontSize);
-    path.fill = this.context.fillStyle as string; // Appliquer explicitement la couleur
-    path.draw(this.context); // Dessiner le texte
+    path.fill = this.context.fillStyle as string;
+    path.draw(this.context);
 
-    this.context.restore(); // Restaurer le contexte
-
+    this.context.restore();
     return font.getAdvanceWidth(textRun.text, fontSize);
   }
 
-  // Méthode pour appliquer les styles (couleur, taille, etc.)
   private applyTextStyle(style: { fontSize: number; color: string }) {
-    this.context.fillStyle = style.color; // Appliquer la couleur
-    console.log("Couleur appliquée :", style.color);
+    this.context.fillStyle = style.color;
   }
 }

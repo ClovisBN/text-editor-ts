@@ -1,4 +1,4 @@
-import { CanvasRenderer } from "./CanvasRenderer";
+import { TypesRenderer } from "./Renderer/TypesRenderer";
 import { Document } from "./DocumentStructure";
 import { DocumentText } from "./types";
 import { documentText as defaultDocumentData } from "./exampleDocumentData";
@@ -13,7 +13,7 @@ export interface CanvasEditorOptions {
 export class CanvasEditorElement extends HTMLElement {
   private canvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D | null;
-  private renderer?: CanvasRenderer;
+  private renderer?: TypesRenderer;
   private documentData: DocumentText;
   private observer: ResizeObserver;
 
@@ -151,7 +151,7 @@ export class CanvasEditorElement extends HTMLElement {
       const { width, height } = this.size;
       const paddingValues = this.padding;
 
-      this.renderer = new CanvasRenderer(
+      this.renderer = new TypesRenderer(
         this.context,
         width,
         height,
@@ -162,7 +162,7 @@ export class CanvasEditorElement extends HTMLElement {
     }
   }
 
-  public getRenderer(): CanvasRenderer | undefined {
+  public getRenderer(): TypesRenderer | undefined {
     return this.renderer;
   }
 }

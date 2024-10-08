@@ -1,19 +1,18 @@
-import { Paragraph } from "./DocumentStructure";
-import { TextLayoutEngine } from "./TextLayoutEngine";
-import { TextRenderer } from "./TextRenderer";
-import { FontManager } from "./FontManager";
-import { ParagraphLayoutEngine } from "./ParagraphLayoutEngine"; // Import
-import { ListLayoutEngine } from "./ListLayoutEngine"; // Import
-import { StyleManager } from "./utils/StyleManager"; // Utilisation de StyleManager
+import { Paragraph } from "../DocumentStructure";
+import { TypesLayoutEngine } from "../LayoutEngine/TypesLayoutEngine";
+import { TextRunRenderer } from "./TextRunRenderer";
+import { FontManager } from "../FontManager";
+import { ParagraphLayoutEngine } from "../LayoutEngine/ParagraphLayoutEngine"; // Import uniquement ParagraphLayoutEngine
+import { StyleManager } from "../utils/StyleManager"; // Utilisation de StyleManager
 
 export class ParagraphRenderer {
   private context: CanvasRenderingContext2D;
-  private textRenderer: TextRenderer;
-  private layoutEngine: TextLayoutEngine;
+  private textRunRenderer: TextRunRenderer;
+  private layoutEngine: TypesLayoutEngine;
 
   constructor(context: CanvasRenderingContext2D, fontManager: FontManager) {
     this.context = context;
-    this.textRenderer = new TextRenderer(context, fontManager, false);
+    this.textRunRenderer = new TextRunRenderer(context, fontManager, false);
 
     const paragraphLayoutEngine = new ParagraphLayoutEngine(fontManager, 0, {
       top: 0,
@@ -21,23 +20,12 @@ export class ParagraphRenderer {
       bottom: 0,
       left: 0,
     });
-    const listLayoutEngine = new ListLayoutEngine(fontManager, 0, {
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0,
-    });
 
-    this.layoutEngine = new TextLayoutEngine(
-      paragraphLayoutEngine,
-      listLayoutEngine,
-      0,
-      {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-      }
+    // Création de TypesLayoutEngine uniquement avec ParagraphLayoutEngine
+    this.layoutEngine = new TypesLayoutEngine(
+      0, // largeur du canvas
+      { top: 0, right: 0, bottom: 0, left: 0 }, // padding
+      paragraphLayoutEngine
     );
   }
 
@@ -52,7 +40,7 @@ export class ParagraphRenderer {
 
     const lines = await this.layoutEngine.layoutParagraph(paragraph);
 
-    this.context.strokeStyle = "red";
+    this.context.strokeStyle = "white";
     this.context.lineWidth = 1;
 
     for (const line of lines) {
@@ -65,13 +53,15 @@ export class ParagraphRenderer {
 
       this.context.strokeRect(x, y, lineWidth, lineHeight);
 
-      // Utilisation correcte des styles avec StyleManager pour chaque TextRun
       for (const runInfo of textRuns) {
         const { textRun, font } = runInfo;
-
-        const style = StyleManager.getTextRunStyle(textRun.style); // Utilisation de StyleManager
-
-        x = await this.textRenderer.renderTextRun(textRun, x, baselineY, font);
+        const style = StyleManager.getTextRunStyle(textRun.style);
+        x = await this.textRunRenderer.renderTextRun(
+          textRun,
+          x,
+          baselineY,
+          font
+        );
       }
 
       y += maxAscender + maxDescender;

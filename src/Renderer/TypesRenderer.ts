@@ -1,9 +1,9 @@
-import { Document, Paragraph, List } from "./DocumentStructure";
-import { FontManager } from "./FontManager";
+import { Document, Paragraph, List } from "../DocumentStructure"; // Importer Paragraph et List
+import { FontManager } from "../FontManager";
 import { ParagraphRenderer } from "./ParagraphRenderer"; // Importer la classe de rendu des paragraphes
 import { ListRenderer } from "./ListRenderer"; // Importer la classe de rendu des listes
 
-export class CanvasRenderer {
+export class TypesRenderer {
   private context: CanvasRenderingContext2D;
   private paragraphRenderer: ParagraphRenderer;
   private listRenderer: ListRenderer;

@@ -1,10 +1,10 @@
-import { ListItem } from "./DocumentStructure";
-import { FontManager } from "./FontManager";
-import { LayoutLine } from "./TextLayoutEngine";
-import { StyleManager } from "./utils/StyleManager"; // Utilisation de StyleManager
-import { BaseLayoutEngine } from "./BaseLayoutEngine"; // Classe de base commune
+import { ListItem } from "../DocumentStructure";
+import { FontManager } from "../FontManager";
+import { LayoutLine } from "./TypesLayoutEngine";
+import { StyleManager } from "../utils/StyleManager"; // Utilisation de StyleManager
+import { TextRunLayoutEngine } from "./TextRunLayoutEngine"; // Classe de base commune
 
-export class ListLayoutEngine extends BaseLayoutEngine {
+export class ListLayoutEngine extends TextRunLayoutEngine {
   constructor(
     fontManager: FontManager,
     canvasWidth: number,
@@ -16,7 +16,7 @@ export class ListLayoutEngine extends BaseLayoutEngine {
   // Utilise une méthode utilitaire pour compléter les styles et gérer les TextRuns
   async layoutListItem(item: ListItem, index: number): Promise<LayoutLine[]> {
     const textRuns = StyleManager.completeTextRuns(item.text.textRuns); // Utilisation d'une méthode utilitaire pour gérer les styles
-    return this.layoutTextRuns(textRuns); // Utilise la logique commune depuis BaseLayoutEngine
+    return this.layoutTextRuns(textRuns); // Utilise la logique commune depuis TextRunLayoutEngine
   }
 
   // Implémentation de la méthode abstraite 'layoutElement'
