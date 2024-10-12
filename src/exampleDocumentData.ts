@@ -27,7 +27,7 @@ export const documentText: DocumentText = {
         type: "paragraph",
         paragraphStyle: {
           lineHeight: 1,
-        }, // Un objet de style vide même s'il n'y a pas de styles spécifiques
+        },
         text: {
           textRuns: [
             {
@@ -39,7 +39,7 @@ export const documentText: DocumentText = {
               },
             },
             {
-              text: "bold text",
+              text: "bold text ",
               style: {
                 bold: true,
                 italic: false,
@@ -47,33 +47,17 @@ export const documentText: DocumentText = {
               },
             },
             {
-              text: " and ",
+              text: "My first critique involves an interface that I came in contact with while working on an assignment for this ",
               style: {
                 bold: false,
-                italic: false,
-                color: "black",
-              },
-            },
-            {
-              text: "italic text ",
-              style: {
-                bold: true,
                 italic: true,
                 color: "black",
               },
             },
             {
-              text: "in the same paragraph. accepts an object where we can change the",
+              text: "and (TextWrangler on Mac) that may.",
               style: {
-                bold: false,
-                italic: false,
-                color: "black",
-              },
-            },
-            {
-              text: " accepts an object where we can change the",
-              style: {
-                bold: false,
+                bold: true,
                 italic: false,
                 color: "red",
               },
@@ -100,81 +84,46 @@ export const documentText: DocumentText = {
         },
       },
       {
-        type: "list",
-        listStyle: {
-          ordered: true,
+        type: "paragraph",
+        paragraphStyle: {
+          lineHeight: 1,
         },
-        items: [
-          {
-            type: "listItem",
-            text: {
-              textRuns: [
-                {
-                  text: "First item",
-                  style: {
-                    fontSize: 12,
-                    color: "red",
-                  },
-                },
-              ],
+        text: {
+          textRuns: [
+            {
+              text: "Second bullet point\n",
+              style: {},
             },
-          },
-          {
-            type: "listItem",
-            text: {
-              textRuns: [
-                {
-                  text: "Second item",
-                  style: {
-                    bold: true,
-                  },
-                },
-              ],
-            },
-          },
-          {
-            type: "listItem",
-            text: {
-              textRuns: [
-                {
-                  text: "Third item",
-                  style: {},
-                },
-              ],
-            },
-          },
-          {
-            type: "listItem",
-            text: {
-              textRuns: [
-                {
-                  text: "Fourth item",
-                  style: {},
-                },
-              ],
-            },
-          },
-          {
-            type: "listItem",
-            text: {
-              textRuns: [
-                {
-                  text: "Fifth item",
-                  style: {
-                    color: "blue",
-                    italic: true,
-                  },
-                },
-              ],
-            },
-          },
-        ],
+          ],
+        },
+        bullet: {
+          listId: "kix.abc123",
+          nestingLevel: 0,
+        },
       },
       {
         type: "paragraph",
         paragraphStyle: {
           lineHeight: 1,
-        }, // Un objet de style vide même s'il n'y a pas de styles spécifiques
+        },
+        text: {
+          textRuns: [
+            {
+              text: "First bullet point\n",
+              style: {},
+            },
+          ],
+        },
+        bullet: {
+          listId: "kix.abc123",
+          nestingLevel: 0,
+        },
+      },
+      {
+        type: "paragraph",
+        paragraphStyle: {
+          lineHeight: 1,
+        },
         text: {
           textRuns: [
             {
@@ -194,38 +143,32 @@ export const documentText: DocumentText = {
               },
             },
             {
-              text: " and ",
+              text: "My first critique involves an interface that I came in contact with while working on an assignment for this ",
               style: {
                 bold: false,
-                italic: false,
-                color: "black",
-              },
-            },
-            {
-              text: "italic text ",
-              style: {
-                bold: true,
                 italic: true,
                 color: "black",
               },
             },
+          ],
+        },
+      },
+      {
+        type: "paragraph",
+        paragraphStyle: {
+          lineHeight: 1,
+        },
+        text: {
+          textRuns: [
             {
-              text: "in the same paragraph. accepts an object where we can change the",
-              style: {
-                bold: false,
-                italic: false,
-                color: "black",
-              },
-            },
-            {
-              text: " accepts an object where we can change the",
-              style: {
-                bold: false,
-                italic: false,
-                color: "red",
-              },
+              text: "Second bullet point\n",
+              style: {},
             },
           ],
+        },
+        bullet: {
+          listId: "kix.abc123",
+          nestingLevel: 0,
         },
       },
     ],

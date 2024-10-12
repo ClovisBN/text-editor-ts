@@ -37,7 +37,9 @@ export abstract class TextRunLayoutEngine {
   }
 
   // Méthode commune pour la mise en page des TextRun, partagée entre paragraphe et liste
-  protected async layoutTextRuns(textRuns: TextRun[]): Promise<LayoutLine[]> {
+  protected async layoutTextRunsCommon(
+    textRuns: TextRun[]
+  ): Promise<LayoutLine[]> {
     const maxWidth = this.canvasWidth - this.padding.left - this.padding.right;
 
     const fontPromises = textRuns.map((run) =>

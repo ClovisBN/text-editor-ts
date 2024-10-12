@@ -2,7 +2,7 @@ export interface DocumentText {
   id: string;
   title: string;
   content: {
-    elements: (ParagraphElement | ListElement)[];
+    elements: ParagraphElement[];
   };
 }
 
@@ -10,27 +10,15 @@ export interface ParagraphElement {
   type: "paragraph";
   paragraphStyle?: {
     heading?: string;
-    lineHeight?: number; // Ajout de lineHeight pour le style d'interligne
+    lineHeight?: number;
   };
   text: {
     textRuns: TextRunElement[];
   };
-}
-
-export interface ListElement {
-  type: "list";
-  listStyle: {
-    ordered: boolean;
-    lineHeight?: number; // Ajout de lineHeight pour le style d'interligne
-  };
-  items: ListItemElement[];
-}
-
-export interface ListItemElement {
-  type: "listItem";
-  text: {
-    textRuns: TextRunElement[];
-  };
+  bullet?: {
+    listId: string;
+    nestingLevel: number;
+  }; // Ajout de la propriété bullet ici
 }
 
 export interface TextRunElement {

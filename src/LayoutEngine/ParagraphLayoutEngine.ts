@@ -16,7 +16,7 @@ export class ParagraphLayoutEngine extends TextRunLayoutEngine {
   // Utilise une méthode utilitaire pour compléter les styles et gérer les TextRuns
   async layoutParagraph(paragraph: Paragraph): Promise<LayoutLine[]> {
     const textRuns = StyleManager.completeTextRuns(paragraph.text.textRuns); // Utilisation d'une méthode utilitaire pour gérer les styles
-    return this.layoutTextRuns(textRuns); // Utilise la logique commune depuis TextRunLayoutEngine
+    return this.layoutTextRunsCommon(textRuns); // Utilise la méthode commune
   }
 
   // Implémentation de la méthode abstraite 'layoutElement'

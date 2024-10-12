@@ -6,14 +6,6 @@ export interface FontStyle {
   italic?: boolean;
   fontSize?: number;
   fontFamily?: string;
-  fontWeight?:
-    | "Thin"
-    | "ExtraLight"
-    | "Light"
-    | "Regular"
-    | "Medium"
-    | "SemiBold"
-    | "Bold";
 }
 
 export class FontManager {
