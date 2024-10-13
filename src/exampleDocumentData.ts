@@ -13,10 +13,10 @@ export const documentText: DocumentText = {
         text: {
           textRuns: [
             {
-              text: "Main Title Wg",
+              text: "gMain Title Wg",
               style: {
                 bold: true,
-                fontSize: 36,
+                fontSize: 16,
                 color: "green",
               },
             },

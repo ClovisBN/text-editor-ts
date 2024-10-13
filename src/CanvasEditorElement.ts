@@ -109,7 +109,7 @@ export class CanvasEditorElement extends HTMLElement {
       left: 0,
     }; // Gérer le cas où padding est undefined
 
-    const scaleFactor = 2;
+    const scaleFactor = 3;
     const ratio = window.devicePixelRatio || 1;
 
     this.setupHighResolutionCanvas(width, height, scaleFactor * ratio);
